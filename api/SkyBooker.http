@@ -1,0 +1,39 @@
+@auth = http://127.0.0.1:32510
+@flight = http://127.0.0.1:32511
+@booking = http://127.0.0.1:32512
+@token = TOKEN_AUS_LOGIN_EINFUEGEN
+@passengerId = 1
+
+### Registrieren (Benutzername/E-Mail bei erneutem Test anpassen)
+POST {{auth}}/api/register
+Content-Type: application/json
+
+{"username":"felipe_demo","eMail":"felipe.demo@example.com","password":"SkyBooker!2026"}
+
+### Login
+POST {{auth}}/api/login
+Content-Type: application/json
+
+{"username":"felipe_demo","password":"SkyBooker!2026"}
+
+### Flüge lesen
+GET {{flight}}/api/flight
+Authorization: Bearer {{token}}
+
+### Flug erstellen (Daten müssen in der Zukunft liegen)
+POST {{flight}}/api/flight
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"flightId":"LX9001","airlineName":"SWISS","source":"Basel","destination":"London","departure_time":"2030-06-01T10:00:00Z","arrival_time":"2030-06-01T12:00:00Z","available_seats":100}
+
+### Buchen (passengerId aus der Login-Antwort übernehmen)
+POST {{booking}}/api/booking
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"flightId":"LX9001","passengerId":{{passengerId}},"passengerFirstname":"Felipe","passengerLastname":"Carvalho","ticketCount":2}
+
+### Eigene Buchungen
+GET {{booking}}/api/booking
+Authorization: Bearer {{token}}

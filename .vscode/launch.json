@@ -1,0 +1,92 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "AuthService",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/AuthService/bin/Debug/net9.0/AuthService.dll",
+      "cwd": "${workspaceFolder}/src/AuthService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32510"
+      },
+      "preLaunchTask": "build SkyBooker"
+    },
+    {
+      "name": "FlightService",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/FlightService/bin/Debug/net9.0/FlightService.dll",
+      "cwd": "${workspaceFolder}/src/FlightService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32511"
+      },
+      "preLaunchTask": "build SkyBooker"
+    },
+    {
+      "name": "BookingService",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/BookingService/bin/Debug/net9.0/BookingService.dll",
+      "cwd": "${workspaceFolder}/src/BookingService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32512"
+      },
+      "preLaunchTask": "build SkyBooker"
+    },
+    {
+      "name": "AuthService (gemeinsam)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/AuthService/bin/Debug/net9.0/AuthService.dll",
+      "cwd": "${workspaceFolder}/src/AuthService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32510"
+      }
+    },
+    {
+      "name": "FlightService (gemeinsam)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/FlightService/bin/Debug/net9.0/FlightService.dll",
+      "cwd": "${workspaceFolder}/src/FlightService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32511"
+      }
+    },
+    {
+      "name": "BookingService (gemeinsam)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/BookingService/bin/Debug/net9.0/BookingService.dll",
+      "cwd": "${workspaceFolder}/src/BookingService",
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://127.0.0.1:32512"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "SkyBooker – alle Dienste",
+      "configurations": [
+        "AuthService (gemeinsam)",
+        "FlightService (gemeinsam)",
+        "BookingService (gemeinsam)"
+      ],
+      "preLaunchTask": "build SkyBooker",
+      "stopAll": true
+    }
+  ]
+}

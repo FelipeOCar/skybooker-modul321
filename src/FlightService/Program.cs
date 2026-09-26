@@ -10,7 +10,14 @@ using SkyBooker.FlightService.Validation;
 using SkyBooker.Shared;
 
 var builder = WebApplication.CreateBuilder(args).AddSkyBooker("FlightService");
-string connection = builder.Configuration.GetConnectionString("FlightDb") ?? throw new InvalidOperationException("ConnectionStrings:FlightDb fehlt. Setup.cmd ausführen.");
+string? connection = builder.Configuration.GetConnectionString("FlightDb");
+if (string.IsNullOrEmpty(connection))
+{
+    string host = builder.Configuration["Mongo:Host"] ?? throw new InvalidOperationException("ConnectionStrings:FlightDb fehlt. Setup.cmd ausführen.");
+    var mongoUrl = new MongoUrlBuilder { Server = new MongoServerAddress(host, 27017), AuthenticationSource = "admin",
+        Username = builder.Configuration["Mongo:Username"], Password = builder.Configuration["Mongo:Password"] };
+    connection = mongoUrl.ToString();
+}
 string database = builder.Configuration["Mongo:Database"] ?? "SkyBookerFlights";
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(connection));
 builder.Services.AddDbContext<FlightDbContext>((services, options) => options.UseMongoDB(services.GetRequiredService<IMongoClient>(), database));

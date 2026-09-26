@@ -1,0 +1,105 @@
+name: skybooker-felipe
+services:
+  mongodb:
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Setup.cmd ausführen}
+    ports:
+    - 127.0.0.1:32517:27017
+    volumes:
+    - flight-data:/data/db
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - mongosh --quiet --host 127.0.0.1 --username root --password "$${MONGO_INITDB_ROOT_PASSWORD}"
+        --authenticationDatabase admin --eval "db.adminCommand({ping:1}).ok"
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Setup.cmd ausführen}
+    ports:
+    - 127.0.0.1:32533:1433
+    volumes:
+    - booking-data:/var/opt/mssql
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - SQLCMDPASSWORD="$${MSSQL_SA_PASSWORD}" /opt/mssql-tools18/bin/sqlcmd -S localhost
+        -U sa -C -b -Q "SELECT 1" -o /dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 24
+      start_period: 40s
+  auth-service:
+    build:
+      context: .
+      dockerfile: src/AuthService/Dockerfile
+    image: skybooker/auth-service:local
+    ports:
+    - 127.0.0.1:32510:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY:?Setup.cmd ausführen}
+      ConnectionStrings__AuthDb: Data Source=/data/auth.db
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    volumes:
+    - auth-data:/data
+  flight-service:
+    build:
+      context: .
+      dockerfile: src/FlightService/Dockerfile
+    image: skybooker/flight-service:local
+    ports:
+    - 127.0.0.1:32511:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY:?Setup.cmd ausführen}
+      Mongo__Host: mongodb
+      Mongo__Username: root
+      Mongo__Password: ${MONGO_ROOT_PASSWORD:?Setup.cmd ausführen}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+  booking-service:
+    build:
+      context: .
+      dockerfile: src/BookingService/Dockerfile
+    image: skybooker/booking-service:local
+    ports:
+    - 127.0.0.1:32512:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Jwt__Key: ${JWT_KEY:?Setup.cmd ausführen}
+      ConnectionStrings__BookingDb: Server=sqlserver,1433;Database=SkyBookerBookings;User
+        Id=sa;Password=${MSSQL_SA_PASSWORD:?Setup.cmd ausführen};Encrypt=True;TrustServerCertificate=True
+      Services__FlightUrl: http://flight-service:8080/
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      flight-service:
+        condition: service_healthy
+volumes:
+  flight-data: null
+  booking-data: null
+  auth-data: null
