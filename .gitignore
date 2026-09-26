@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+.env
+skybooker.local.json
+**/data/
+**/logs/
+**/TestResults/
+artifacts/
+*.zip

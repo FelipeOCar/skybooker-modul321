@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk.Web"><PropertyGroup></PropertyGroup><ItemGroup><PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.19" /><ProjectReference Include="../SkyBooker.Shared/SkyBooker.Shared.csproj" /></ItemGroup></Project>
