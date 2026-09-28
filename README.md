@@ -4,6 +4,25 @@
 
 Flugverwaltung und Passagierbuchungen mit drei ASP.NET-Core-Microservices. Das Projekt enthält den bearbeitbaren C#-Quellcode, eine Visual-Studio-Solution, VS-Code-Konfiguration, Docker Compose, automatisierte Tests und Abgabeunterlagen.
 
+## Was macht die Anwendung?
+
+SkyBooker ist ein Backend für die Verwaltung von Flügen und Buchungen. Die Bedienung erfolgt über **Swagger** im Browser oder über **Postman**. Eine separate Website mit Buchungsformularen ist nicht Bestandteil des Projekts.
+
+Der **AuthService** registriert Benutzer und stellt beim Login einen JWT-Zugangstoken aus. Der **FlightService** speichert und liefert Fluginformationen. Der **BookingService** nimmt Buchungen für den angemeldeten Benutzer entgegen. Vor dem Speichern fragt er den FlightService per HTTP ab, ob die Flugnummer existiert und der Flug noch nicht abgeflogen ist. Jeder Dienst verwendet seine eigene Datenbank.
+
+Der typische Ablauf lautet: **registrieren, anmelden, Token übernehmen, Flug anlegen oder auswählen, buchen und eigene Buchungen abrufen**. Die folgende Anleitung erklärt diesen Ablauf nach dem Start der Dienste Schritt für Schritt.
+
+## Inhaltsverzeichnis
+
+- [Schnellstart mit Visual Studio](#schnellstart-mit-visual-studio)
+- [Start mit Visual Studio Code](#start-mit-visual-studio-code)
+- [Komplett in Docker starten](#komplett-in-docker-starten)
+- [Voraussetzungen](#voraussetzungen)
+- [Die Anwendung in Swagger bedienen](#die-anwendung-in-swagger-bedienen)
+- [Testen](#testen)
+- [Umsetzung und Funktionsumfang](#umsetzung)
+- [Weiterbearbeiten und auf GitHub abgeben](#weiterbearbeiten-und-abgeben)
+
 ## Schnellstart mit Visual Studio
 
 1. ZIP vollständig entpacken, beispielsweise nach `C:\Projekte\SkyBooker_Felipe_Carvalho`.
@@ -44,6 +63,87 @@ Einzelne Dienste lassen sich ebenfalls über die gleichnamigen Profile starten. 
 - Für Git-Verwaltung: Git für Windows. Für die geforderte API-Demo: Postman.
 - Ausreichend Arbeitsspeicher für Docker und die IDE, praktisch mindestens 8 GB RAM am Rechner; SQL Server benötigt davon eigenen freien Speicher.
 - Die Ports `32510`, `32511`, `32512`, `32517` und `32533` müssen frei sein.
+
+## Die Anwendung in Swagger bedienen
+
+Alle drei Dienste müssen laufen. In Swagger den gewünschten Endpunkt öffnen, **Try it out** wählen, die Eingaben ausfüllen und **Execute** drücken. Die Antwort erscheint darunter mit HTTP-Status und Antwortdaten.
+
+### 1. Benutzer registrieren
+
+Im AuthService unter http://127.0.0.1:32510/swagger den Endpunkt **POST `/api/register`** öffnen:
+
+```json
+{
+  "username": "felipe",
+  "eMail": "felipe@example.com",
+  "password": "SkyBooker!2026"
+}
+```
+
+Das sind lokale Beispieldaten. Ein eigenes Passwort verwenden. Es benötigt 12–128 Zeichen, Gross- und Kleinbuchstaben, eine Ziffer und ein Sonderzeichen. Bei Erfolg kommt **201** zurück. Benutzername und E-Mail müssen eindeutig sein. Bei **409** einen anderen Namen und eine andere E-Mail verwenden oder mit dem bestehenden Konto anmelden. Die Datenbank speichert einen Passwort-Hash.
+
+### 2. Anmelden und Token übernehmen
+
+Im selben Swagger **POST `/api/login`** ausführen:
+
+```json
+{
+  "username": "felipe",
+  "password": "SkyBooker!2026"
+}
+```
+
+Die Antwort enthält **`token`** und **`passengerId`**. Beide Werte für die nächsten Schritte übernehmen. Der Token gilt 15 Minuten. Danach erneut anmelden. Der ebenfalls vorhandene **GET `/api/login`** unterstützt Basic Auth; die genaue Verwendung steht in [Start und Fehlersuche](docs/START_UND_FEHLERSUCHE.md#jwt-in-swagger).
+
+### 3. FlightService und BookingService autorisieren
+
+http://127.0.0.1:32511/swagger und http://127.0.0.1:32512/swagger öffnen. In **beiden** Oberflächen oben auf **Authorize** klicken und beim Schema **Bearer** nur den Token einfügen, ohne Anführungszeichen und ohne das Wort `Bearer`. Mit **Authorize** bestätigen und das Fenster schliessen. Ohne gültigen Token antworten diese Dienste mit **401**.
+
+### 4. Einen Flug anlegen oder auswählen
+
+Im FlightService **POST `/api/flight`** ausführen:
+
+```json
+{
+  "flightId": "LX123",
+  "airlineName": "SWISS",
+  "source": "Basel",
+  "destination": "London",
+  "departure_time": "2030-10-01T10:00:00Z",
+  "arrival_time": "2030-10-01T12:00:00Z",
+  "available_seats": 100
+}
+```
+
+Die Beispielzeiten bei Bedarf ersetzen: Abflug in der Zukunft, Ankunft nach dem Abflug. `Z` kennzeichnet UTC. Start und Ziel müssen unterschiedlich sein. Die Flugnummer ist eindeutig; bei **409** eine neue verwenden. Erfolg: **201**.
+
+Mit **GET `/api/flight`** alle Flüge lesen. **GET `/api/flight/{id}`** verwendet die automatisch erzeugte Datenbank-ID aus dem Feld `id`. Die Buchung verwendet hingegen die fachliche Flugnummer aus `flightId`, beispielsweise `LX123`. Ein bereits vorhandener zukünftiger Flug kann direkt gebucht werden.
+
+### 5. Eine Buchung erstellen
+
+Im BookingService **POST `/api/booking`** ausführen. **`passengerId` zwingend durch den eigenen Wert aus der Login-Antwort ersetzen**. Die `1` im folgenden Beispiel ist nur ein Platzhalter:
+
+```json
+{
+  "flightId": "LX123",
+  "passengerId": 1,
+  "passengerFirstname": "Felipe",
+  "passengerLastname": "Carvalho",
+  "ticketCount": 2
+}
+```
+
+Bei Erfolg antwortet die API mit **201** und der gespeicherten Buchung samt eigener `id`. Der BookingService prüft Eingaben und Benutzerzuordnung, fragt den Flug per HTTP ab und speichert anschliessend in SQL Server. Ungültige Daten ergeben **400**, eine fremde PassengerId **403**, ein unbekannter oder bereits abgeflogener Flug **422**. Bei einem nicht erreichbaren FlightService kommt **503**, ohne eine Buchung zu speichern.
+
+### 6. Eigene Buchungen ansehen
+
+**GET `/api/booking`** liefert die Buchungen des angemeldeten Benutzers. **GET `/api/booking/{id}`** zeigt eine einzelne eigene Buchung anhand ihrer Buchungs-ID. Fremde Buchungen werden nicht angezeigt. Für eine einzelne nicht sichtbare oder nicht existierende Buchung kommt **404**.
+
+Die Anwendung unterstützt Erstellen und Lesen. Bearbeiten, Stornieren, Bezahlung und automatische Sitzplatzreduzierung sind nicht implementiert. Die Details zum gewählten Umfang stehen unter [Umsetzung](#umsetzung).
+
+### Schneller Gesamttest
+
+**`Test_API.cmd`** führt den Ablauf mit neuen Testdaten automatisch aus. Alternativ `postman/SkyBooker.postman_collection.json` in Postman importieren und im Collection Runner alle Requests in Reihenfolge ausführen. Dabei werden Token und IDs automatisch weitergegeben. Erwartet werden 20 erfolgreiche Statusprüfungen, darunter bewusst ausgelöste Fehlerantworten.
 
 ## Testen
 

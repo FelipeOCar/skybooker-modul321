@@ -50,3 +50,7 @@ Ebenfalls noch offen: Windows-PowerShell-Startskripte tatsächlich unter Windows
 8. Nach dem GitHub-Push beide CI-Jobs unter Actions auf Erfolg prüfen.
 
 Die API-Prüfung legt pro Durchlauf neue Demo-Daten an. Lokales Stoppen entfernt keine Volumes. Den tatsächlichen Windows-/Docker-Abnahmelauf mit Datum und Ergebnis vor der Abgabe hier ergänzen.
+
+## Dokumentationsaktualisierung vom 28. September 2026
+
+Das Inhaltsverzeichnis wurde als zweite Folie ergänzt. Die Präsentation enthält jetzt 16 Folien. Die neue Folie und die angepassten Seitenzahlen wurden gerendert und geprüft; die bisherigen Folieninhalte sind erhalten. README und GitHub-Anleitung wurden um konkrete Bedienungs- und Upload-Schritte ergänzt. Der Anwendungscode ist gegenüber dem oben dokumentierten Testlauf unverändert.
