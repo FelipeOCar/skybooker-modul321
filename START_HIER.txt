@@ -1,0 +1,31 @@
+SkyBooker – Felipe Carvalho
+
+SO STARTET ES IN VISUAL STUDIO:
+1. ZIP vollständig entpacken.
+2. Docker Desktop öffnen (Linux-Container).
+3. Start_Entwicklung.cmd doppelklicken und auf «Datenbanken bereit» warten.
+4. SkyBooker.sln öffnen.
+5. In der Solution mehrere Startprojekte wählen:
+   AuthService = Starten
+   FlightService = Starten
+   BookingService = Starten
+   SkyBooker.Shared = Keine
+   SkyBooker.Tests = Keine
+6. F5 drücken.
+7. Test_API.cmd ausführen oder Postman-Collection importieren.
+
+VS CODE:
+Start_Entwicklung.cmd ausführen, SkyBooker.code-workspace öffnen,
+Debugprofil «SkyBooker – alle Dienste» wählen und F5 drücken.
+
+NUR DOCKER:
+Start_Docker.cmd startet das ganze System.
+Nicht gleichzeitig dieselben APIs mit F5 starten.
+
+Swagger:
+http://127.0.0.1:32510/swagger  AuthService
+http://127.0.0.1:32511/swagger  FlightService
+http://127.0.0.1:32512/swagger  BookingService
+
+Zuerst registrieren, dann anmelden. Es gibt keinen vorinstallierten Benutzer.
+Weitere Schritte und Voraussetzungen: README.md

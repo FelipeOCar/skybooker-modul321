@@ -1,0 +1,44 @@
+﻿Test;Ergebnis;Dauer;Testlauf beendet
+SkyBooker.Tests.ApiIntegrationTests.BasicGetLoginWorksWithoutQueryCredentials;Passed;00:00:00.3507123;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ApiIntegrationTests.BookingUsesHttpFlightLookupAndRestrictsOwnership;Passed;00:00:00.3770491;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ApiIntegrationTests.FlightHasIdCanBeReadAndDuplicateIsConflict;Passed;00:00:00.3214946;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidBasicHeaderIsUnauthorized(authorization: ""Basic invalid!"")";Passed;00:00:00.0035049;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidBasicHeaderIsUnauthorized(authorization: ""Bearer nope"")";Passed;00:00:00.0016093;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidJwtIsUnauthorized(reason: ""algorithm"")";Passed;00:00:00.0052224;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidJwtIsUnauthorized(reason: ""audience"")";Passed;00:00:00.0016569;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidJwtIsUnauthorized(reason: ""expired"")";Passed;00:00:00.0105742;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidJwtIsUnauthorized(reason: ""issuer"")";Passed;00:00:00.0028463;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.InvalidJwtIsUnauthorized(reason: ""signature"")";Passed;00:00:00.0022507;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ApiIntegrationTests.InvalidRequestReturnsFieldErrors;Passed;00:00:00.1597054;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ApiIntegrationTests.MissingFlightDoesNotCreateBooking;Passed;00:00:00.1270037;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.MissingTokenIsUnauthorized(path: ""/api/booking"")";Passed;00:00:00.0013818;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ApiIntegrationTests.MissingTokenIsUnauthorized(path: ""/api/flight"")";Passed;00:00:00.0020418;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ApiIntegrationTests.OpenApiContainsAllRequiredRoutes;Passed;00:00:00.8697726;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.AuthManagerTests.RegistrationHashesPasswordAndRejectsDuplicatesIgnoringCase;Passed;00:00:00.7435007;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.AuthManagerTests.TokenContainsStablePassengerIdAndExpiresAfterFifteenMinutes;Passed;00:00:00.1940041;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.AuthManagerTests.WrongPasswordNeverIssuesToken;Passed;00:00:00.1382596;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.DepartedFlightRejected;Passed;00:00:00.0013841;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.MalformedResponseNeverCreatesBooking;Passed;00:00:00.0019221;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.UpstreamFailuresAreMapped(status: 401, expected: Unavailable);Passed;00:00:00.0000165;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.UpstreamFailuresAreMapped(status: 404, expected: NotFound);Passed;00:00:00.0002612;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.UpstreamFailuresAreMapped(status: 500, expected: Unavailable);Passed;00:00:00.0026551;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.FlightClientTests.ValidRequestForwardsBearerAndChecksDeparture;Passed;00:00:00.0006956;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.BookingRejectsInvalidTicketCount(tickets: -1);Passed;00:00:00.0002960;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.BookingRejectsInvalidTicketCount(tickets: 0);Passed;00:00:00.0000624;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.BookingRejectsInvalidTicketCount(tickets: 1001);Passed;00:00:00.0002529;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightAcceptsBoundaryCapacity(seats: 0);Passed;00:00:00.0018456;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightAcceptsBoundaryCapacity(seats: 1000);Passed;00:00:00.0003285;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightRejectsArrivalBeforeDeparture;Passed;00:00:00.0012186;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightRejectsInvalidCapacity(seats: -1);Passed;00:00:00.0002287;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightRejectsInvalidCapacity(seats: 1001);Passed;00:00:00.0002704;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightRejectsPastDeparture;Passed;00:00:00.0002352;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.FlightRejectsSameAirport;Passed;00:00:00.0002026;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsInvalidIdentity(username: ""a"", email: ""valid@example.com"")";Passed;00:00:00.0001427;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsInvalidIdentity(username: ""abc def"", email: ""valid@example.com"")";Passed;00:00:00.0002180;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsInvalidIdentity(username: ""valid"", email: ""wrong"")";Passed;00:00:00.0003036;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsWeakPasswords(password: ""NoDigitsButLong!"")";Passed;00:00:00.0000493;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsWeakPasswords(password: ""NoSpecialBut1234"")";Passed;00:00:00.0000743;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsWeakPasswords(password: ""ONLYUPPERCASE123!"")";Passed;00:00:00.0000486;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsWeakPasswords(password: ""kurz"")";Passed;00:00:00.0003905;2026-09-28T13:44:06.0150555+02:00
+"SkyBooker.Tests.ValidationTests.RegistrationRejectsWeakPasswords(password: ""onlylowercase123!"")";Passed;00:00:00.0028077;2026-09-28T13:44:06.0150555+02:00
+SkyBooker.Tests.ValidationTests.ValidRegistrationAccepted;Passed;00:00:00.0002255;2026-09-28T13:44:06.0150555+02:00
