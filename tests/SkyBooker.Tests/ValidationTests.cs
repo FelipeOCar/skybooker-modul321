@@ -16,17 +16,17 @@ public sealed class ValidationTests
     [InlineData("NoDigitsButLong!")]
     [InlineData("NoSpecialBut1234")]
     public void RegistrationRejectsWeakPasswords(string password) =>
-        Assert.False(new RegisterValidator().Validate(new("felipe", "felipe@example.com", password)).IsValid);
+        Assert.False(new RegisterValidator().Validate(new RegisterRequest("felipe", "felipe@example.com", password)).IsValid);
 
     [Theory]
     [InlineData("a", "valid@example.com")]
     [InlineData("abc def", "valid@example.com")]
     [InlineData("valid", "wrong")]
     public void RegistrationRejectsInvalidIdentity(string username, string email) =>
-        Assert.False(new RegisterValidator().Validate(new(username, email, "SkyBooker!2026")).IsValid);
+        Assert.False(new RegisterValidator().Validate(new RegisterRequest(username, email, "SkyBooker!2026")).IsValid);
 
     [Fact]
-    public void ValidRegistrationAccepted() => Assert.True(new RegisterValidator().Validate(new("felipe", "felipe@example.com", "SkyBooker!2026")).IsValid);
+    public void ValidRegistrationAccepted() => Assert.True(new RegisterValidator().Validate(new RegisterRequest("felipe", "felipe@example.com", "SkyBooker!2026")).IsValid);
 
     private static CreateFlightRequest Flight => new("LX123", "SWISS", "Basel", "London", DateTimeOffset.UtcNow.AddDays(3), DateTimeOffset.UtcNow.AddDays(3).AddHours(2), 100);
 
@@ -48,5 +48,5 @@ public sealed class ValidationTests
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(1001)]
-    public void BookingRejectsInvalidTicketCount(int tickets) => Assert.False(new BookingValidator().Validate(new("LX123", 1, "Felipe", "Carvalho", tickets)).IsValid);
+    public void BookingRejectsInvalidTicketCount(int tickets) => Assert.False(new BookingValidator().Validate(new CreateBookingRequest("LX123", 1, "Felipe", "Carvalho", tickets)).IsValid);
 }

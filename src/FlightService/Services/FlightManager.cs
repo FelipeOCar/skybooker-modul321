@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using SkyBooker.FlightService.Contracts;
 using SkyBooker.FlightService.Data;
 using SkyBooker.FlightService.Models;
@@ -21,7 +22,7 @@ public sealed class FlightManager(FlightDbContext db, TimeProvider clock)
             AvailableSeats = input.AvailableSeats, CreatedAt = now, UpdatedAt = now };
         db.Flights.Add(flight);
         try { await db.SaveChangesAsync(ct); }
-        catch (DbUpdateException)
+        catch (Exception exception) when (exception is DbUpdateException or MongoException)
         {
             db.ChangeTracker.Clear();
             if (await db.Flights.AnyAsync(x => x.FlightId == input.FlightId, ct)) return null;

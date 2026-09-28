@@ -15,8 +15,8 @@ public sealed class BookingDbContext(DbContextOptions<BookingDbContext> options)
         booking.Property(x => x.FlightId).HasMaxLength(12).IsRequired();
         booking.Property(x => x.PassengerFirstname).HasMaxLength(100).IsRequired();
         booking.Property(x => x.PassengerLastname).HasMaxLength(100).IsRequired();
-        booking.Property(x => x.CreatedAt).HasColumnType("datetime2");
-        booking.Property(x => x.UpdatedAt).HasColumnType("datetime2");
+        booking.Property(x => x.CreatedAt).HasColumnType("datetime2").HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        booking.Property(x => x.UpdatedAt).HasColumnType("datetime2").HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         booking.HasIndex(x => x.PassengerId);
     }
 }
